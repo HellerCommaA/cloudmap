@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "128455788837",
+    "firebase_url": "https://cloudmap-8bbed.firebaseio.com",
+    "project_id": "cloudmap-8bbed",
+    "storage_bucket": "cloudmap-8bbed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128455788837:android:9c8d5fbdcb058427",
+        "android_client_info": {
+          "package_name": "photo.heller.android.cloudmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128455788837-pup9ff0vjmu9m9gvpq7v4a7vv11snfup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "photo.heller.android.cloudmap",
+            "certificate_hash": "cfdd798b8e26a3f0f137d791c436f53df64ae8e2"
+          }
+        },
+        {
+          "client_id": "128455788837-bgrmeh0rvbu5jpcij36fg2kn0k696fab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVBtg7HVF0iwzihz7pOmSiJ8f2I7rVD3s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128455788837-bgrmeh0rvbu5jpcij36fg2kn0k696fab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
