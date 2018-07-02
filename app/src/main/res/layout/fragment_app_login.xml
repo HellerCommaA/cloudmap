@@ -4,7 +4,7 @@
     android:id="@+id/loginFragContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AppLogin">
+    tools:context=".fragments.AppLoginFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="email"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -26,19 +26,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword" />
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login" />
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Register" />
+            android:text="@string/register" />
     </LinearLayout>
 </FrameLayout>

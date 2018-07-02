@@ -1,4 +1,4 @@
-package photo.heller.android.cloudmap;
+package photo.heller.android.cloudmap.fragments;
 
 
 import android.os.Bundle;
@@ -13,18 +13,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import photo.heller.android.cloudmap.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AppLogin extends Fragment implements View.OnClickListener {
+public class AppLoginFragment extends Fragment implements View.OnClickListener {
     Button mRegisterButton;
     Button mSubmitButton;
     TextView mEmailText;
     TextView mPasswordText;
-    private final String TAG = AppLogin.class.getSimpleName();
+    private final String TAG = AppLoginFragment.class.getSimpleName();
 
-    public AppLogin() {
+    public AppLoginFragment() {
         // Required empty public constructor
     }
 
