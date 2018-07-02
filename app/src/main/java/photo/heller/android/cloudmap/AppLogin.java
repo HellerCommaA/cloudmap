@@ -74,7 +74,4 @@ public class AppLogin extends Fragment implements View.OnClickListener {
         fragmentTransaction.replace(R.id.frag_container, frag).commit();
     }
 
-    public interface AppLoginFragmentMessage {
-        void launchNext();
-    }
 }

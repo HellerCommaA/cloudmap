@@ -3,6 +3,7 @@ package photo.heller.android.cloudmap;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SignUpFragment extends Fragment implements View.OnClickListener{
 
     private final String TAG = SignUpFragment.class.getSimpleName();
@@ -18,6 +24,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
     private TextView mPasswordTextView;
     private TextView mPasswordConfirmTextView;
     private TextView mEmailTextView;
+    private FirebaseAuth mAuth;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -34,11 +41,30 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
         mPasswordConfirmTextView = view.findViewById(R.id.signupPasswordTextConfirm);
         mEmailTextView = view.findViewById(R.id.signupEmailText);
         mRegisterButton.setOnClickListener(this);
+        mAuth = FirebaseAuth.getInstance();
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        Log.d(TAG, "onClick: AEH register button clicked");
+        String password = mPasswordTextView.getText().toString();
+        String confirmPw = mPasswordConfirmTextView.getText().toString();
+        String username = mEmailTextView.getText().toString();
+        if (password.length() > 0 && confirmPw.length() > 0 && username.length() > 0) {
+            if (password.equals(confirmPw)) {
+                mAuth.createUserWithEmailAndPassword(mEmailTextView.getText().toString(), mPasswordTextView.getText().toString()).
+                    addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: successfully registered in");
+                            } else {
+                                Log.d(TAG, "onComplete: did not successfully register");
+                            }
+                        }
+                    }
+                );
+            }
+        }
     }
 }
