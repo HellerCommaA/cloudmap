@@ -1,9 +1,21 @@
 <resources>
+
+    <!-- Global app stuff -->
     <string name="app_name">Cloud Map</string>
+
+    <!-- Registration -->
     <string name="register_ok_may_login">Registration successful, you may login!</string>
     <string name="register">Register</string>
-    <string name="login">Login</string>
+    <string name="register_failed">Registration Failed. Do you have an account?</string>
+
+    <!-- text area hints -->
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
+
+    <!-- Login -->
+    <string name="login">Login</string>
+    <string name="login_failed">Login Failed!</string>
+    <string name="login_ok">Login successful!</string>
+
 </resources>

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -60,13 +61,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "onComplete: successfully registered in");
                                 Toast.makeText(getActivity(), R.string.register_ok_may_login, Toast.LENGTH_SHORT).show();
-                                try {
-                                    SignUpFragment.this.finalize();
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
+                                getActivity().getSupportFragmentManager().popBackStack();
                             } else {
                                 Log.d(TAG, "onComplete: did not successfully register");
+                                Toast.makeText(getActivity(), R.string.register_failed, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onComplete: " + task.getException());
                             }
                         }
                     }

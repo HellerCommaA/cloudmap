@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "128455788837-pup9ff0vjmu9m9gvpq7v4a7vv11snfup.apps.googleusercontent.com",
+          "client_id": "128455788837-e7uhm9ajeicvpsjj6ua7fld0a5l9ugbm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "photo.heller.android.cloudmap",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "128455788837-bgrmeh0rvbu5jpcij36fg2kn0k696fab.apps.googleusercontent.com",
+          "client_id": "128455788837-m4h779qdujr5r8jgan02ill1keun8npv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBVBtg7HVF0iwzihz7pOmSiJ8f2I7rVD3s"
+          "current_key": "AIzaSyAHRuHHCHzkyj2x81lufvHOSJxNSWrHbWY"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "128455788837-bgrmeh0rvbu5jpcij36fg2kn0k696fab.apps.googleusercontent.com",
+              "client_id": "128455788837-m4h779qdujr5r8jgan02ill1keun8npv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

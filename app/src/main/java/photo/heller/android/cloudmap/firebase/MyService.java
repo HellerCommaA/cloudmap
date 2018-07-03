@@ -19,4 +19,9 @@ public class MyService extends FirebaseMessagingService {
             Log.d(TAG, "AEH onMessageReceived: " + remoteMessage.getNotification().getBody());
         }
     }
+
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+    }
 }
