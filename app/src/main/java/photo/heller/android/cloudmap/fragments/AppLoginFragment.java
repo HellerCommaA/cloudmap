@@ -21,11 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import photo.heller.android.cloudmap.R;
 import photo.heller.android.cloudmap.interfaces.FragmentFinished;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AppLoginFragment extends Fragment implements View.OnClickListener {
+    private final String TAG = AppLoginFragment.class.getSimpleName();
     Button mRegisterButton;
     Button mSubmitButton;
     TextView mEmailText;
@@ -34,14 +31,13 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
     FragmentFinished mInterface;
     SignUpFragment mSignupFragment;
 
-    private final String TAG = AppLoginFragment.class.getSimpleName();
-
-    public AppLoginFragment() { }
+    public AppLoginFragment() {
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof FragmentFinished) {
+        if (context instanceof FragmentFinished) {
             mInterface = (FragmentFinished) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement AppLoginFragmentInterface");
@@ -66,7 +62,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.registerButton:
                 registerButtonClicked(view);
                 break;
@@ -94,7 +90,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
                     }
                 }
             });
-        }        
+        }
     }
 
     @Override

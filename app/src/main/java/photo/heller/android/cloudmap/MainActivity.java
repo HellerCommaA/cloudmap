@@ -15,15 +15,15 @@ import photo.heller.android.cloudmap.fragments.MapContainerFragment;
 import photo.heller.android.cloudmap.fragments.SignUpFragment;
 import photo.heller.android.cloudmap.interfaces.FragmentFinished;
 
-public class MainFragment extends AppCompatActivity implements FragmentFinished {
+public class MainActivity extends AppCompatActivity implements FragmentFinished {
 
-    private final String TAG = MainFragment.class.getSimpleName();
-    private FirebaseAuth mAuth;
+    private final String TAG = MainActivity.class.getSimpleName();
     FragmentManager fragmentManager;
     FloatingActionButton mFab;
     AppLoginFragment mAppLoginFragment;
     MapContainerFragment mMapContainerFragment;
     SignUpFragment mSignupFragment;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,10 @@ public class MainFragment extends AppCompatActivity implements FragmentFinished 
 
         if (mAuth.getCurrentUser() == null) {
             // not logged in show login frag
-            launchFragment(mAppLoginFragment, false);
+            replaceFragments(mAppLoginFragment, false);
         } else {
             // loggedin show map
-            launchFragment(mMapContainerFragment, false);
+            replaceFragments(mMapContainerFragment, false);
         }
     }
 
@@ -74,13 +74,14 @@ public class MainFragment extends AppCompatActivity implements FragmentFinished 
 
     /**
      * this is called when one of our three activites finish
+     *
      * @param xFrag the fragment that we'll kill
-     * @param xId R.layout id of next fragment
+     * @param xId   R.layout id of next fragment
      */
     @Override
     public void onFragmentFinished(Fragment xFrag, Integer xId, boolean xAddToBackStack) {
         // TODO refactor to enum of known fragments so we don't hit default case
-        switch(xId) {
+        switch (xId) {
             case R.layout.fragment_app_login:
                 replaceFragments(mAppLoginFragment, xAddToBackStack);
                 break;
