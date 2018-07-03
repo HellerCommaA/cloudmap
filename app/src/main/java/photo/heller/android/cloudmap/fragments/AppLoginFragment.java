@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +13,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.AuthAccountRequestCreator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import photo.heller.android.cloudmap.R;
-import photo.heller.android.cloudmap.interfaces.ActivityFinished;
+import photo.heller.android.cloudmap.interfaces.FragmentFinished;
 
 
 /**
@@ -36,7 +31,9 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
     TextView mEmailText;
     TextView mPasswordText;
     FirebaseAuth mAuth;
-    ActivityFinished mInterface;
+    FragmentFinished mInterface;
+    SignUpFragment mSignupFragment;
+
     private final String TAG = AppLoginFragment.class.getSimpleName();
 
     public AppLoginFragment() { }
@@ -44,8 +41,8 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof ActivityFinished) {
-            mInterface = (ActivityFinished) context;
+        if(context instanceof FragmentFinished) {
+            mInterface = (FragmentFinished) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement AppLoginFragmentInterface");
         }
@@ -62,6 +59,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
         mRegisterButton.setOnClickListener(this);
         mSubmitButton.setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
+        mSignupFragment = new SignUpFragment();
 
         return view;
     }
@@ -75,9 +73,6 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
             case R.id.loginButton:
                 loginButtonClicked(view);
                 break;
-//          intentionally missing
-//             default:
-//                break;
         }
     }
 
@@ -92,10 +87,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getActivity(), R.string.login_ok, Toast.LENGTH_SHORT).show();
-                        mInterface.activityFinished(R.layout.fragment_app_login);
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
-                        ft.remove(AppLoginFragment.this).commit();
+                        mInterface.onFragmentFinished(AppLoginFragment.this, R.layout.fragment_map_container, false);
                     } else {
                         Log.d(TAG, "onComplete: " + task.getException());
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
@@ -104,13 +96,14 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
             });
         }        
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     private void registerButtonClicked(View view) {
-        Log.d(TAG, "registerButtonClicked: AEH: registerButtonClicked");
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        SignUpFragment frag = new SignUpFragment();
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.frag_container, frag).commit();
+        mInterface.onFragmentFinished(this, R.layout.fragment_sign_up, true);
     }
 
     @Override
@@ -118,10 +111,4 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
         mInterface = null;
         super.onDetach();
     }
-
-    // facilitates communication to the creating activity
-    public interface AppLoginFragmentInterface {
-        void onComplete();
-    }
-
 }
