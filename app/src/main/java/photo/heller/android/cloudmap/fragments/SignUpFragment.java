@@ -1,8 +1,11 @@
 package photo.heller.android.cloudmap.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import photo.heller.android.cloudmap.R;
+import photo.heller.android.cloudmap.interfaces.ActivityFinished;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener{
 
@@ -27,11 +31,21 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
     private TextView mPasswordConfirmTextView;
     private TextView mEmailTextView;
     private FirebaseAuth mAuth;
+    private ActivityFinished mCallback;
 
     public SignUpFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof ActivityFinished) {
+            mCallback = (ActivityFinished) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement ActivityFinished");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +75,10 @@ public class SignUpFragment extends Fragment implements View.OnClickListener{
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "onComplete: successfully registered in");
                                 Toast.makeText(getActivity(), R.string.register_ok_may_login, Toast.LENGTH_SHORT).show();
-                                getActivity().getSupportFragmentManager().popBackStack();
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                FragmentTransaction ft = fm.beginTransaction();
+                                mCallback.activityFinished(R.layout.fragment_sign_up);
+                                ft.remove(SignUpFragment.this).commit();
                             } else {
                                 Log.d(TAG, "onComplete: did not successfully register");
                                 Toast.makeText(getActivity(), R.string.register_failed, Toast.LENGTH_SHORT).show();

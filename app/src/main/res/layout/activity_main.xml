@@ -7,4 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/debugFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="?attr/colorAccent" />
 </android.support.constraint.ConstraintLayout>
