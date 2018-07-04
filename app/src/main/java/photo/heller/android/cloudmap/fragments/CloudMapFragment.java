@@ -2,7 +2,10 @@ package photo.heller.android.cloudmap.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +26,17 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     private MapView mMapView;
     private GoogleMap mMap;
+    private ActionBar mActionBar;
 
     public CloudMapFragment() {
 
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        mActionBar.hide();
     }
 
     @Override
@@ -69,6 +80,7 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mActionBar.show();
         mMapView.onDestroy();
     }
 

@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         } else {
             // loggedin show map
             // show new Googlemap frag
-            launchGoogleMapFragment();
+            replaceFragments(mGoogleMapFragment, false);
         }
     }
 
@@ -62,12 +63,6 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frag_container, xFragment);
         if (xBackStack) fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-    void launchGoogleMapFragment() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frag_container, mGoogleMapFragment);
         fragmentTransaction.commit();
     }
 
