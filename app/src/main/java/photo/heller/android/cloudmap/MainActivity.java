@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import photo.heller.android.cloudmap.activities.CloudGoogleMapActivity;
 import photo.heller.android.cloudmap.fragments.AppLoginFragment;
+import photo.heller.android.cloudmap.fragments.CloudMapFragment;
 import photo.heller.android.cloudmap.fragments.SignUpFragment;
 import photo.heller.android.cloudmap.interfaces.FragmentFinished;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
     FloatingActionButton mFab;
     AppLoginFragment mAppLoginFragment;
     SignUpFragment mSignupFragment;
+    CloudMapFragment mGoogleMapFragment;
     private FirebaseAuth mAuth;
 
     @Override
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
 
         mAppLoginFragment = new AppLoginFragment();
         mSignupFragment = new SignUpFragment();
+        mGoogleMapFragment = new CloudMapFragment();
 
         // temp debug FAB
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -51,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
             replaceFragments(mAppLoginFragment, false);
         } else {
             // loggedin show map
-            // show new GOoglemapactivity
-            launchGoogleMapActivity();
+            // show new Googlemap frag
+            launchGoogleMapFragment();
         }
     }
 
@@ -69,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (xBackstack) fragmentTransaction.addToBackStack(null);
         fragmentTransaction.add(R.id.frag_container, xFragment);
+        fragmentTransaction.commit();
+    }
+
+    void launchGoogleMapFragment() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frag_container, mGoogleMapFragment);
         fragmentTransaction.commit();
     }
 
@@ -89,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         // TODO refactor to enum of known fragments so we don't hit default case
         if (xFrag == null && xId == null) {
             // signal to launch googlemap activity
-            launchGoogleMapActivity();
+//            launchGoogleMapActivity();
+            launchGoogleMapFragment();
             return;
         }
         switch (xId) {
