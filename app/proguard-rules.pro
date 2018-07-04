@@ -22,3 +22,6 @@
 
 -keepattributes Signature
 -keepattributes *Annotation*
+-keepclassmembers class photo.heller.android.cloudmap.model.** {
+  *;
+}

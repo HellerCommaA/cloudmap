@@ -16,17 +16,24 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import photo.heller.android.cloudmap.R;
+import photo.heller.android.cloudmap.interfaces.ModelEventListener;
+import photo.heller.android.cloudmap.model.MapModel;
+import photo.heller.android.cloudmap.model.members.CloudLatLng;
 
-public class CloudMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class CloudMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener, ModelEventListener {
     private final String TAG = CloudMapFragment.class.getSimpleName();
 
     private MapView mMapView;
     private GoogleMap mMap;
     private ActionBar mActionBar;
+    private MapModel mModel;
 
     public CloudMapFragment() {
 
@@ -54,13 +61,14 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
         }
 
         mMapView.getMapAsync(this);
+        mModel = MapModel.getInstance();
+        mModel.addEventListener(this);
 
         return v;
     }
 
     @Override
     public void onMapReady(GoogleMap xMap) {
-        Log.d(TAG, "onMapReady: AEH ON MAP READY!!!");
         mMap = xMap;
         mMap.setOnMapClickListener(this);
     }
@@ -92,6 +100,19 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void onMapClick(LatLng latLng) {
+        mModel.addLatLng(new CloudLatLng(latLng));
+    }
 
+    @Override
+    public void onModelChange(List db) {
+        Log.d(TAG, "onModelChange: AEH onModelChange!!!!");
+        List<LatLng> l;
+        l = db;
+        mMap.clear();
+        for(LatLng each : l) {
+            MarkerOptions o = new MarkerOptions();
+            o.position(each);
+            mMap.addMarker(o);
+        }
     }
 }

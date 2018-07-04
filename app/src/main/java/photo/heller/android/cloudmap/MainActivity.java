@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import photo.heller.android.cloudmap.fragments.AppLoginFragment;
 import photo.heller.android.cloudmap.fragments.CloudMapFragment;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         fragmentManager = getSupportFragmentManager();
         mAuth = FirebaseAuth.getInstance();
         mFab = findViewById(R.id.debugFab);
+
+        // enable database persist to local db
+        // TODO figure out when to call this
+        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         mAppLoginFragment = new AppLoginFragment();
         mSignupFragment = new SignUpFragment();
