@@ -83,7 +83,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getActivity(), R.string.login_ok, Toast.LENGTH_SHORT).show();
-                        mInterface.onFragmentFinished(AppLoginFragment.this, R.layout.fragment_map_container, false);
+                        mInterface.onFragmentFinished(null, null, false);
                     } else {
                         Log.d(TAG, "onComplete: " + task.getException());
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();

@@ -17,5 +17,6 @@
     <string name="login">Login</string>
     <string name="login_failed">Login Failed!</string>
     <string name="login_ok">Login successful!</string>
+    <string name="title_activity_cloud_google_map">Map</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package photo.heller.android.cloudmap;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,8 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import photo.heller.android.cloudmap.activities.CloudGoogleMapActivity;
 import photo.heller.android.cloudmap.fragments.AppLoginFragment;
-import photo.heller.android.cloudmap.fragments.MapContainerFragment;
 import photo.heller.android.cloudmap.fragments.SignUpFragment;
 import photo.heller.android.cloudmap.interfaces.FragmentFinished;
 
@@ -21,7 +22,6 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
     FragmentManager fragmentManager;
     FloatingActionButton mFab;
     AppLoginFragment mAppLoginFragment;
-    MapContainerFragment mMapContainerFragment;
     SignUpFragment mSignupFragment;
     private FirebaseAuth mAuth;
 
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         mFab = findViewById(R.id.debugFab);
 
         mAppLoginFragment = new AppLoginFragment();
-        mMapContainerFragment = new MapContainerFragment();
         mSignupFragment = new SignUpFragment();
 
         // temp debug FAB
@@ -52,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
             replaceFragments(mAppLoginFragment, false);
         } else {
             // loggedin show map
-            replaceFragments(mMapContainerFragment, false);
+            // show new GOoglemapactivity
+            launchGoogleMapActivity();
         }
     }
 
@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         fragmentTransaction.commit();
     }
 
+    void launchGoogleMapActivity() {
+        Intent i = new Intent();
+        i.setClass(this, CloudGoogleMapActivity.class);
+        startActivity(i);
+    }
+
     /**
      * this is called when one of our three activites finish
      *
@@ -81,12 +87,14 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
     @Override
     public void onFragmentFinished(Fragment xFrag, Integer xId, boolean xAddToBackStack) {
         // TODO refactor to enum of known fragments so we don't hit default case
+        if (xFrag == null && xId == null) {
+            // signal to launch googlemap activity
+            launchGoogleMapActivity();
+            return;
+        }
         switch (xId) {
             case R.layout.fragment_app_login:
                 replaceFragments(mAppLoginFragment, xAddToBackStack);
-                break;
-            case R.layout.fragment_map_container:
-                replaceFragments(mMapContainerFragment, xAddToBackStack);
                 break;
             case R.layout.fragment_sign_up:
                 replaceFragments(mSignupFragment, xAddToBackStack);
