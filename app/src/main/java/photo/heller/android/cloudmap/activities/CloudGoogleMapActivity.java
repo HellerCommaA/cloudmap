@@ -12,6 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import photo.heller.android.cloudmap.R;
 
@@ -45,6 +46,8 @@ public class CloudGoogleMapActivity extends FragmentActivity implements OnMapRea
 
     private void mapFabClicked() {
         Log.d(TAG, "mapFabClicked: ");
+        FirebaseAuth.getInstance().signOut();
+        finish();
     }
 
     @Override
