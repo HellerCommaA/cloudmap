@@ -64,15 +64,15 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.registerButton:
-                registerButtonClicked(view);
+                registerButtonClicked();
                 break;
             case R.id.loginButton:
-                loginButtonClicked(view);
+                loginButtonClicked();
                 break;
         }
     }
 
-    private void loginButtonClicked(View view) {
+    private void loginButtonClicked() {
         if (mEmailText.length() > 0 && mPasswordText.length() > 0) {
             // submit
             String username = mEmailText.getText().toString();
@@ -83,7 +83,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         Toast.makeText(getActivity(), R.string.login_ok, Toast.LENGTH_SHORT).show();
-                        mInterface.onFragmentFinished(null, null, false);
+                        mInterface.onFragmentFinished(AppLoginFragment.this, R.layout.fragment_cloud_map, false);
                     } else {
                         Log.d(TAG, "onComplete: " + task.getException());
                         Toast.makeText(getActivity(), R.string.login_failed, Toast.LENGTH_SHORT).show();
@@ -98,7 +98,7 @@ public class AppLoginFragment extends Fragment implements View.OnClickListener {
         super.onDestroy();
     }
 
-    private void registerButtonClicked(View view) {
+    private void registerButtonClicked() {
         mInterface.onFragmentFinished(this, R.layout.fragment_sign_up, true);
     }
 
