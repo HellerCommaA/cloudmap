@@ -102,4 +102,24 @@ public class MapModel implements ValueEventListener {
     public void removeListener(ModelEventListener listener) {
         mListeners.remove(listener);
     }
+
+    public void getAllLocations() {
+        mLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final List<CloudLatLng> list = new ArrayList<>();
+                for(DataSnapshot each : dataSnapshot.getChildren()) {
+                    list.add(each.getValue(CloudLatLng.class));
+                }
+                for(ModelEventListener each : mListeners) {
+                    each.onModelChange(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

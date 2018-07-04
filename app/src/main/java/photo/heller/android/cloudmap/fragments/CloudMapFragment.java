@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 import photo.heller.android.cloudmap.R;
+import photo.heller.android.cloudmap.controllers.ActivityViewController;
 import photo.heller.android.cloudmap.interfaces.ModelEventListener;
 import photo.heller.android.cloudmap.model.MapModel;
 import photo.heller.android.cloudmap.model.members.CloudLatLng;
@@ -69,7 +70,7 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.getMapAsync(this);
         mModel = MapModel.getInstance();
         mModel.addEventListener(this);
-
+        Log.d(TAG, "onCreateView: AEH");
         return v;
     }
 
@@ -87,9 +88,16 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mModel.getAllLocations();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        Log.d(TAG, "onPause: AEH");
     }
 
     @Override
@@ -121,7 +129,16 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
         }
         mMap.clear();
         for (Object each : l) {
-            LatLng e = (LatLng) each;
+            LatLng e = null;
+            if (each instanceof LatLng) {
+                e = (LatLng) each;
+            } else if (each instanceof CloudLatLng) {
+                e = new LatLng(((CloudLatLng) each).mLat, ((CloudLatLng) each).mLon);
+            }
+            if (e == null) {
+                Log.e(TAG, "onModelChange: Could not decode each on model change listener");
+                continue;
+            }
             MarkerOptions o = new MarkerOptions();
             o.position(e);
             mMap.addMarker(o);
@@ -130,7 +147,7 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        mModel.deleteMarker(marker.getPosition());
+        ActivityViewController.getInstance().replaceFragments(new LocationDetailFragment(), true);
         return true; // consume the event
     }
 }
