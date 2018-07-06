@@ -1,5 +1,6 @@
 package photo.heller.android.cloudmap.controllers;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,9 +32,10 @@ public class ActivityViewController {
     }
 
     // replaces fragment container with a given fragment
-    public void replaceFragments(Fragment xFragment, boolean xBackStack) {
+    public void replaceFragments(Fragment xFragment, boolean xBackStack, Bundle xBundle) {
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (xBundle != null) xFragment.setArguments(xBundle);
         fragmentTransaction.replace(R.id.frag_container, xFragment);
         if (xBackStack) fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

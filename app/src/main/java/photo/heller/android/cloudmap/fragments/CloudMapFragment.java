@@ -70,7 +70,6 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.getMapAsync(this);
         mModel = MapModel.getInstance();
         mModel.addEventListener(this);
-        Log.d(TAG, "onCreateView: AEH");
         return v;
     }
 
@@ -97,7 +96,6 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        Log.d(TAG, "onPause: AEH");
     }
 
     @Override
@@ -147,7 +145,9 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        ActivityViewController.getInstance().replaceFragments(new LocationDetailFragment(), true);
+        Bundle b = new Bundle();
+        b.putParcelable(LocationDetailFragment.LAT_LON_BUNDLE, marker.getPosition());
+        ActivityViewController.getInstance().replaceFragments(new LocationDetailFragment(), true, b);
         return true; // consume the event
     }
 }

@@ -49,18 +49,18 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
             @Override
             public void onClick(View view) {
                 mAuth.signOut();
-                mController.replaceFragments(mAppLoginFragment, false);
+                mController.replaceFragments(mAppLoginFragment, false, null);
             }
         });
         // end DEBUG FAB
 
         if (mAuth.getCurrentUser() == null) {
             // not logged in show login frag
-            mController.replaceFragments(mAppLoginFragment, false);
+            mController.replaceFragments(mAppLoginFragment, false, null);
         } else {
             // loggedin show map
             // show new Googlemap frag
-            mController.replaceFragments(mGoogleMapFragment, false);
+            mController.replaceFragments(mGoogleMapFragment, false, null);
         }
     }
 
@@ -76,13 +76,13 @@ public class MainActivity extends AppCompatActivity implements FragmentFinished 
         // TODO refactor to enum of known fragments so we don't hit default case
         switch (xId) {
             case R.layout.fragment_app_login:
-                mController.replaceFragments(mAppLoginFragment, xAddToBackStack);
+                mController.replaceFragments(mAppLoginFragment, xAddToBackStack, null);
                 break;
             case R.layout.fragment_sign_up:
-                mController.replaceFragments(mSignupFragment, xAddToBackStack);
+                mController.replaceFragments(mSignupFragment, xAddToBackStack, null);
                 break;
             case R.layout.fragment_cloud_map:
-                mController.replaceFragments(mGoogleMapFragment, xAddToBackStack);
+                mController.replaceFragments(mGoogleMapFragment, xAddToBackStack, null);
                 break;
         }
     }

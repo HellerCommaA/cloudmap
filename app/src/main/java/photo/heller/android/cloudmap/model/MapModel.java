@@ -47,19 +47,7 @@ public class MapModel implements ValueEventListener {
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        List<LatLng> llList = new ArrayList<>();
-        for (DataSnapshot each : dataSnapshot.getChildren()) {
-            CloudLatLng ll = each.getValue(CloudLatLng.class);
-            if (ll == null) {
-                Log.e(TAG, "onDataChange: ll == null");
-                continue;
-            }
-            llList.add(new LatLng(ll.mLat, ll.mLon));
-        }
-        for (ModelEventListener each : mListeners) {
-            if (each == null) continue;
-            each.onModelChange(llList);
-        }
+        updateLocations(dataSnapshot);
     }
 
     @Override
@@ -81,15 +69,18 @@ public class MapModel implements ValueEventListener {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // TODO this seems ... hacky refactor
                 // O(n)
+                boolean found = false;
                 CloudLatLng needle = new CloudLatLng(position);
                 for(DataSnapshot each : dataSnapshot.getChildren()) {
                     CloudLatLng ll = each.getValue(CloudLatLng.class);
                     if (ll == null) continue;
                     if (ll.mLat == needle.mLat && ll.mLon == needle.mLon) {
                         each.getRef().removeValue();
-                        return;
+                        found = true;
+                        break;
                     }
                 }
+                if (found) updateLocations(dataSnapshot);
             }
 
             @Override
@@ -97,6 +88,20 @@ public class MapModel implements ValueEventListener {
 
             }
         });
+    }
+
+    private void updateLocations(DataSnapshot xSnapshot) {
+        if (xSnapshot == null) return;
+        List<CloudLatLng> list = new ArrayList<>();
+        for(DataSnapshot each : xSnapshot.getChildren()) {
+            if (each == null) continue;
+            list.add(each.getValue(CloudLatLng.class));
+        }
+        for(ModelEventListener each : mListeners) {
+            if (each == null) continue;
+            each.onModelChange(list);
+        }
+
     }
 
     public void removeListener(ModelEventListener listener) {
@@ -107,13 +112,7 @@ public class MapModel implements ValueEventListener {
         mLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final List<CloudLatLng> list = new ArrayList<>();
-                for(DataSnapshot each : dataSnapshot.getChildren()) {
-                    list.add(each.getValue(CloudLatLng.class));
-                }
-                for(ModelEventListener each : mListeners) {
-                    each.onModelChange(list);
-                }
+                updateLocations(dataSnapshot);
             }
 
             @Override
