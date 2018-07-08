@@ -22,4 +22,7 @@
     <string name="lon">Longitude</string>
     <string name="delete">Delete</string>
 
+    <!-- Location Detail -->
+    <string name="public_location">Public</string>
+
 </resources>
