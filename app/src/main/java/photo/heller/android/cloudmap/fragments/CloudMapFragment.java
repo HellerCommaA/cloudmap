@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 import java.util.Objects;
@@ -114,7 +115,11 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mModel.addLatLng(new CloudLatLng(latLng));
+        String uuid = FirebaseAuth.getInstance().getUid();
+        CloudLatLng ll = new CloudLatLng(latLng);
+        ll.setOwner(uuid);
+        ll.setPrivate(true);
+        mModel.addLatLng(ll);
     }
 
     @Override
@@ -128,17 +133,21 @@ public class CloudMapFragment extends Fragment implements OnMapReadyCallback, Go
         mMap.clear();
         for (Object each : l) {
             LatLng e = null;
+            CloudLatLng cll = null;
             if (each instanceof LatLng) {
                 e = (LatLng) each;
             } else if (each instanceof CloudLatLng) {
-                e = new LatLng(((CloudLatLng) each).mLat, ((CloudLatLng) each).mLon);
-            }
-            if (e == null) {
-                Log.e(TAG, "onModelChange: Could not decode each on model change listener");
-                continue;
+                cll = (CloudLatLng) each;
             }
             MarkerOptions o = new MarkerOptions();
-            o.position(e);
+            if (cll != null) {
+                o.position(new LatLng(cll.getLat(), cll.getLon()));
+            } else if (e != null) {
+                o.position(e);
+            } else {
+                Log.d(TAG, "onModelChange: casts all failed");
+                continue;
+            }
             mMap.addMarker(o);
         }
     }

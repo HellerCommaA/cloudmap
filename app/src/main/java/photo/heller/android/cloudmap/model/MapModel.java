@@ -23,19 +23,16 @@ public class MapModel implements ValueEventListener {
     private static MapModel mInstance;
     private final String TAG = MapModel.class.getSimpleName();
     private final String LAT_LNG = "/latLng/";
-    private final String PUBLIC_LOCATIONS = "/publicLocations/";
     private FirebaseDatabase mDatabase;
     private DatabaseReference mLatLng;
-    private DatabaseReference mPublicLatLng;
     private List<ModelEventListener<? extends Object>> mListeners;
-
+    private String mAuthUuid;
 
     private MapModel() {
         mDatabase = FirebaseDatabase.getInstance();
-        mLatLng = mDatabase.getReference(FirebaseAuth.getInstance().getUid() + LAT_LNG);
-        mPublicLatLng = mDatabase.getReference(PUBLIC_LOCATIONS);
+        mAuthUuid = FirebaseAuth.getInstance().getUid();
+        mLatLng = mDatabase.getReference(LAT_LNG);
         mLatLng.addValueEventListener(this);
-        mPublicLatLng.addValueEventListener(this);
         mListeners = new LinkedList<ModelEventListener<? extends Object>>();
     }
 
@@ -48,10 +45,6 @@ public class MapModel implements ValueEventListener {
 
     public void addLatLng(CloudLatLng latLng) {
         mLatLng.push().setValue(latLng);
-    }
-
-    public void addPublicLatLng(CloudLatLng xLatLng) {
-        mPublicLatLng.push().setValue(xLatLng);
     }
 
     @Override
@@ -85,17 +78,6 @@ public class MapModel implements ValueEventListener {
 
             }
         });
-        mPublicLatLng.orderByValue().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                findAndDelete(dataSnapshot, position);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void findAndDelete(DataSnapshot dataSnapshot, LatLng position) {
@@ -106,7 +88,11 @@ public class MapModel implements ValueEventListener {
         for(DataSnapshot each : dataSnapshot.getChildren()) {
             CloudLatLng ll = each.getValue(CloudLatLng.class);
             if (ll == null) continue;
-            if (ll.mLat == needle.mLat && ll.mLon == needle.mLon) {
+            if (!ll.getOwner().equals(mAuthUuid)) {
+                Log.d(TAG, "findAndDelete: AEH: current user does not own this CloudLatLng object");
+                continue; // can'd delete someone elses' location
+            }
+            if (ll.getLat() == needle.getLat() && ll.getLon() == needle.getLon()) {
                 each.getRef().removeValue();
                 found = true;
                 break;
@@ -120,6 +106,12 @@ public class MapModel implements ValueEventListener {
         List<CloudLatLng> list = new ArrayList<>();
         for(DataSnapshot each : xSnapshot.getChildren()) {
             if (each == null) continue;
+            CloudLatLng cll = each.getValue(CloudLatLng.class);
+            if (cll == null) continue;
+            if (cll.isPrivate() && !cll.getOwner().equals(mAuthUuid)) {
+                // this instance isn't owned by current user
+                continue;
+            }
             list.add(each.getValue(CloudLatLng.class));
         }
         for(ModelEventListener each : mListeners) {
@@ -142,25 +134,17 @@ public class MapModel implements ValueEventListener {
                 final List<CloudLatLng> list = new ArrayList<>();
                 for(DataSnapshot each : dataSnapshot.getChildren()) {
                     if (each == null) continue;
+                    CloudLatLng cll = each.getValue(CloudLatLng.class);
+                    if (cll == null) continue;
+                    if (cll.isPrivate() && !cll.getOwner().equals(mAuthUuid)) {
+                        // this is someone elses private location
+                        continue;
+                    }
                     list.add(each.getValue(CloudLatLng.class));
                 }
-                mPublicLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot each : dataSnapshot.getChildren()) {
-                            if (each == null) continue;
-                            list.add(each.getValue(CloudLatLng.class));
-                        }
-                        for(ModelEventListener each : mListeners) {
-                            each.onModelChange(list);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                for(ModelEventListener each : mListeners) {
+                    each.onModelChange(list);
+                }
             }
 
             @Override
@@ -170,9 +154,28 @@ public class MapModel implements ValueEventListener {
         });
     }
 
-    // makes a given location public
-    public void setPublic(LatLng xLocation) {
-        deleteMarker(xLocation);
-        addPublicLatLng(new CloudLatLng(xLocation));
+    public void setPublic(final LatLng xLocation) {
+        // NOTE: this is totally a hack
+        mLatLng.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot xDataSnapshot) {
+                for(DataSnapshot each : xDataSnapshot.getChildren()) {
+                    if (each == null) continue;
+                    CloudLatLng cll = each.getValue(CloudLatLng.class);
+                    if (cll == null) continue;
+                    if (cll.getLon() == xLocation.longitude && cll.getLat() == xLocation.latitude) {
+                        if (!cll.getOwner().equals(mAuthUuid)) break;
+                        deleteMarker(xLocation);
+                        cll.setPrivate(false);
+                        addLatLng(cll);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError xDatabaseError) {
+
+            }
+        });
     }
 }
